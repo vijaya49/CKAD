@@ -102,6 +102,17 @@ kubectl config view --minify
 
 ---
 
+## 7. Delete EKS cluster
+
+Delete all the manual which you have done then you can run this command to decommission all the resources like EKS cluster, Nodegroup and OIDC identity provider.
+
+```bash
+eksctl delete cluster eksdemo1
+
+```
+
+---
+
 ## ✅ Summary
 
 You’ve now:
