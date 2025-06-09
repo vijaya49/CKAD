@@ -91,7 +91,6 @@ kubectl config view --minify
 
 ---
 
----
 ## 6. EKS clsuter pricing
  
   - EKS is not for free
