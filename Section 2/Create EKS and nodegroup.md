@@ -91,6 +91,18 @@ kubectl config view --minify
 
 ---
 
+---
+## 6. EKS clsuter pricing
+ 
+  - EKS is not for free
+  - inshort, no free tier for EKS
+
+  - We pay $0.10 per hour for each amazon EKS cluster
+  - per day: $2.4s
+  - For 30days: $72 
+
+---
+
 ## ✅ Summary
 
 You’ve now:
