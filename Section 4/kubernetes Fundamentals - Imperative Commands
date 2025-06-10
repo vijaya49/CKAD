@@ -1,0 +1,30 @@
+1. Kubernetes Architecture
+2. Kubernetes vs AWS EKS
+3. Pods
+4. Services
+    - NodePort
+    - ClusterIP 
+    - Loadbalancer
+5. ReplicaSet
+6. Deployment
+
+
+POD: 
+    - A POD is a single instanceof an Application
+    - A POD is the smallest object, that you can create in kubernetes.
+
+ReplicaSet:
+    - A ReplicaSet will maintain a stable number of PODs running at any given time
+    - In short, it is often used to guarantee the availablity of specified number of identical pods.
+
+Deployment: 
+    - A Deployment runs multiple replicas of your application 
+    - And automatically replaces any instances that fail or become unresponsive
+    - Rollout & Rollback changes to applications.
+    - Deployments are well suited for stateless apllications
+
+What is stateful and stateless applications?
+
+Service:
+    - A service is an abstraction for pods, proividing a stable, so called virtual IP address.
+    - Im simple terms, service sits infront of a POD and acts as a Loadbalacer.
