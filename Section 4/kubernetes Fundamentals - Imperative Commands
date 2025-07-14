@@ -10,7 +10,7 @@
 
 
 POD: 
-    - A POD is a single instanceof an Application
+    - A POD is a single instance of an Application
     - A POD is the smallest object, that you can create in kubernetes.
 
 ReplicaSet:
@@ -28,3 +28,5 @@ What is stateful and stateless applications?
 Service:
     - A service is an abstraction for pods, proividing a stable, so called virtual IP address.
     - Im simple terms, service sits infront of a POD and acts as a Loadbalacer.
+
+________________________________________________________________________________________
