@@ -1,46 +1,46 @@
-From 17/06/2025 to 20/06/2025
+From 14/07/2025 to 17/07/2025
 
-1. Kubernetes Fundamentals - Imperative Commands using kubectl
-2. Kubernetes Fundamentals - Declarative Approach using YAML
-3. EKS hosted Applications Storage with AWS EBS
-4. Kubernetes Secrets, Init Containers, Liveness Probes, Request Limits, and Namespaces
+1. Kubernetes Fundamentals - Imperative Commands using kubectl - 14/07/2025
+2. Kubernetes Fundamentals - Declarative Approach using YAML - 14/07/2025
+3. EKS hosted Applications Storage with AWS EBS - 15/07/2025
+4. Kubernetes Secrets, Init Containers, Liveness Probes, Request Limits, and Namespaces - 16/07/2025 & 17/07/2025
 
-From 21/06/2025 to 22/06/2025: Revision and Deep dive of above concepts
+From 18/07/2025: Revision and Deep dive of above concepts
 
-From 23/06/2025 to 27/06/2025
+From 19/07/2025 to 27/06/2025
 
-1. EKS hosted Application Storage with AWS RDS
-2. EKS with AWS Load Balancers - Classic & Network Load Balancers
-3. ALB Ingress - Install AWS Load Balancer Controller on AWS EKS Cluster
-4. ALB Ingress - Basics using AWS Application Load Balancer
-5. ALB Ingress - Context Path Routing using AWS Application Load Balancer
-6. ALB Ingress - SSL & SSL Redirect using AWS Application Load Balancer
-7. ALB Ingress - External DNS Install and Implement Ingress & Service
+1. EKS hosted Application Storage with AWS RDS - 19/07/2025
+2. EKS with AWS Load Balancers - Classic & Network Load Balancers - 19/07/2025
+3. ALB Ingress - Install AWS Load Balancer Controller on AWS EKS Cluster - 20/07/2025
+4. ALB Ingress - Basics using AWS Application Load Balancer - 21/07/2025
+5. ALB Ingress - Context Path Routing using AWS Application Load Balancer - 22/07/2025
+6. ALB Ingress - SSL & SSL Redirect using AWS Application Load Balancer - 22/07/2025
+7. ALB Ingress - External DNS Install and Implement Ingress & Service - 23/07/2025
 
-From 28/06/2025 to 29/06/2025: Revision and Deep dive of above concepts
+From 24/07/2025: Revision and Deep dive of above concepts
 
-From 30/06/2025 to 04/07/2025
+From 26/07/2025 to 31/07/2025
 
-1. ALB Ingress - Name-based Virtual Host / Host Header Routing
-2. ALB Ingress - SSL Discovery Host and TLS
-3. ALB Ingress - Ingress Groups
-4. ALB Ingress - Target Type - IP Mode
-5. ALB Ingress - Internal Application Load Balancer
-6. EKS Fargate - Serverless
-7. AWS Network Load Balancer with AWS Load Balancer Controller
+1. ALB Ingress - Name-based Virtual Host / Host Header Routing - 25/07/2025
+2. ALB Ingress - SSL Discovery Host and TLS - 25/07/2025
+3. ALB Ingress - Ingress Groups - 25/07/2025
+4. ALB Ingress - Target Type - IP Mode - 25/07/2024
+5. ALB Ingress - Internal Application Load Balancer - 25/07/2025
+6. EKS Fargate - Serverless - 27/07/2025
+7. AWS Network Load Balancer with AWS Load Balancer Controller - 28/07/2025
+8. EKS & ECR** - Elastic Container Registry - 29/07/2025
 
-From 05/07/2025 to 06/07/2025: Revision and Deep dive of above concepts
+From 29/07/2025 to 31/07/2025: Revision and Deep dive of above concepts
 
-From 07/07/2025 to 11/07/2025
+From 01/08/2025 to 07/08/2025
 
-1. EKS & ECR** - Elastic Container Registry
-2. EKS DevOps with AWS Developer Tools** - CodeCommit, CodeBuild, and CodePipeline
-3. Microservice Deployment on EKS**
-4. Microservices Distributed Tracing** using AWS X-Ray
-5. Microservice Canary Deployments** on AWS EKS with AWS X-Ray
-6. EKS Autoscaling** - Horizontal Pod Autoscaler (HPA)
-7. EKS Autoscaling** - Vertical Pod Autoscaler (VPA)
-8. EKS Autoscaling** - Cluster Autoscaler
-9. AWS CloudWatch Container Insights** with EKS
+2. EKS DevOps with AWS Developer Tools** - CodeCommit, CodeBuild, and CodePipeline - 01/08/2025
+3. Microservice Deployment on EKS** - 02/08/2025
+4. Microservices Distributed Tracing** using AWS X-Ray - 03/08/2025
+5. Microservice Canary Deployments** on AWS EKS with AWS X-Ray - 04/08/2025
+6. EKS Autoscaling** - Horizontal Pod Autoscaler (HPA) - 04/08/2025
+7. EKS Autoscaling** - Vertical Pod Autoscaler (VPA) - 04/08/2025
+8. EKS Autoscaling** - Cluster Autoscaler - 04/08/2025 
+9. AWS CloudWatch Container Insights** with EKS - 05/08/2025
 
 12/07/2025 to 13/07/2025 - covere remining topics
