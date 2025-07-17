@@ -186,4 +186,163 @@ curl http://<ALB-DNS-name>
 ```yaml
 alb.ingress.kubernetes.io/scheme: internet-facing
 ```
+---------------------------------------------------------------------------------------
 
+# 🛠 Manual ALB Setup for EKS Web App (Private/Internal)
+
+This guide provides step-by-step instructions for manually configuring an **Application Load Balancer (ALB)** in **private/internal mode** for an application running on an **Amazon EKS cluster**.
+
+---
+
+## 📌 Assumptions
+
+- You already have a running EKS cluster.
+- Your application is exposed via a **Kubernetes Service of type **``.
+- You want the ALB to be internal/private (accessible only inside the VPC).
+
+---
+
+## 📁 Project Structure
+
+```
+eks-private-alb-webapp/
+├── service.yaml # Kubernetes Service manifest
+├── README.md    # This file
+```
+
+---
+
+## 1️⃣ Create Kubernetes NodePort Service
+
+If you haven't already, define a NodePort service for your app:
+
+```yaml
+# service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-service
+spec:
+  type: NodePort
+  selector:
+    app: web-app
+  ports:
+    - port: 80
+      targetPort: 80
+      nodePort: 30080  # Use custom or let K8s allocate one
+```
+
+Apply the service:
+
+```bash
+kubectl apply -f service.yaml
+```
+
+---
+
+## 2️⃣ Create Target Group in AWS
+
+```bash
+aws elbv2 create-target-group \
+  --name web-app-targets \
+  --protocol HTTP \
+  --port 30080 \
+  --vpc-id <your-vpc-id> \
+  --target-type instance
+```
+
+♻️ Use `--target-type ip` if using custom networking (ENI mode) or if your EKS nodes are in a different account.
+
+---
+
+## 3️⃣ Register EKS Worker Nodes
+
+Get instance IDs of your worker nodes:
+
+```bash
+aws ec2 describe-instances \
+  --filters Name=tag:eks:cluster-name,Values=<your-cluster-name>
+```
+
+Register the instances:
+
+```bash
+aws elbv2 register-targets \
+  --target-group-arn <target-group-arn> \
+  --targets Id=i-xxxxxx,Port=30080
+```
+
+---
+
+## 4️⃣ Create Internal ALB
+
+```bash
+aws elbv2 create-load-balancer \
+  --name web-app-internal-alb \
+  --subnets subnet-xxxx subnet-yyyy \
+  --scheme internal \
+  --type application \
+  --security-groups sg-xxxxxx
+```
+
+---
+
+## 5️⃣ Create HTTP Listener
+
+```bash
+aws elbv2 create-listener \
+  --load-balancer-arn <alb-arn> \
+  --protocol HTTP \
+  --port 80 \
+  --default-actions Type=forward,TargetGroupArn=<target-group-arn>
+```
+
+---
+
+## 6️⃣ Test Access Internally
+
+From an EC2 instance or bastion host in the same VPC:
+
+```bash
+curl http://<internal-alb-dns-name>
+```
+
+---
+
+## ✅ Summary
+
+| Resource      | Type     | Notes                                   |
+| ------------- | -------- | --------------------------------------- |
+| Load Balancer | Internal | Manually created in VPC                 |
+| Target Group  | HTTP     | Points to EKS worker nodes via NodePort |
+| Service       | NodePort | Exposes the app for ALB                 |
+| Access        | Private  | Internal-only (within VPC)              |
+
+---
+
+## 🔐 Security Tips
+
+- Ensure the security group for the ALB allows inbound traffic on port 80 only from trusted sources.
+- Use NACLs and security group rules to restrict access further if needed.
+- Monitor ALB and target group health status via CloudWatch or ELB console.
+
+---
+
+## 🛋️ Cleanup Resources
+
+To avoid unexpected charges:
+
+```bash
+# Delete listener
+aws elbv2 delete-listener --listener-arn <listener-arn>
+
+# Delete load balancer
+aws elbv2 delete-load-balancer --load-balancer-arn <alb-arn>
+
+# Deregister and delete target group
+aws elbv2 deregister-targets --target-group-arn <target-group-arn> --targets Id=i-xxxxxx
+aws elbv2 delete-target-group --target-group-arn <target-group-arn>
+
+# Delete Kubernetes service
+kubectl delete -f service.yaml
+```
