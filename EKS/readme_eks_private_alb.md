@@ -67,6 +67,55 @@ eksctl create cluster \
   --without-nodegroup
 ```
 
+** log
+```bash
+2025-07-21 17:18:27 [ℹ]  eksctl version 0.207.0
+2025-07-21 17:18:27 [ℹ]  using region us-east-1
+2025-07-21 17:18:28 [✔]  using existing VPC (vpc-045a67b30a03f42d0) and subnets (private:map[us-east-1a:{subnet-0e9417d9895394eb6 us-east-1a 192.168.2.0/24 0 } us-east-1b:{subnet-0905412cf0ba9a59d us-east-1b 192.168.3.0/24 0 }] public:map[])
+2025-07-21 17:18:28 [!]  custom VPC/subnets will be used; if resulting cluster doesn't function as expected, make sure to review the configuration of VPC/subnets
+2025-07-21 17:18:28 [ℹ]  using Kubernetes version 1.32
+2025-07-21 17:18:28 [ℹ]  creating EKS cluster "private-alb-cluster01" in "us-east-1" region with
+2025-07-21 17:18:28 [ℹ]  if you encounter any issues, check CloudFormation console or try 'eksctl utils describe-stacks --region=us-east-1 --cluster=private-alb-cluster01'
+2025-07-21 17:18:28 [ℹ]  Kubernetes API endpoint access will use default of {publicAccess=true, privateAccess=false} for cluster "private-alb-cluster01" in "us-east-1"
+2025-07-21 17:18:28 [ℹ]  CloudWatch logging will not be enabled for cluster "private-alb-cluster01" in "us-east-1"
+2025-07-21 17:18:28 [ℹ]  you can enable it with 'eksctl utils update-cluster-logging --enable-types={SPECIFY-YOUR-LOG-TYPES-HERE (e.g. all)} --region=us-east-1 --cluster=private-alb-cluster01'
+2025-07-21 17:18:28 [ℹ]  default addons metrics-server, vpc-cni, kube-proxy, coredns were not specified, will install them as EKS addons
+2025-07-21 17:18:28 [ℹ]
+2 sequential tasks: { create cluster control plane "private-alb-cluster01",
+    2 sequential sub-tasks: {
+        1 task: { create addons },
+        wait for control plane to become ready,
+    }
+}
+2025-07-21 17:18:28 [ℹ]  building cluster stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:18:28 [ℹ]  deploying stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:18:58 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:19:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:20:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:21:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:22:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:23:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:24:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:25:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:26:28 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:27:29 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-cluster"
+2025-07-21 17:27:29 [ℹ]  creating addon: metrics-server
+2025-07-21 17:27:30 [ℹ]  successfully created addon: metrics-server
+2025-07-21 17:27:30 [!]  recommended policies were found for "vpc-cni" addon, but since OIDC is disabled on the cluster, eksctl cannot configure the requested permissions; the recommended way to provide IAM permissions for "vpc-cni" addon is via pod identity associations; after addon creation is completed, add all recommended policies to the config file, under `addon.PodIdentityAssociations`, and run `eksctl update addon`
+2025-07-21 17:27:30 [ℹ]  creating addon: vpc-cni
+2025-07-21 17:27:30 [ℹ]  successfully created addon: vpc-cni
+2025-07-21 17:27:31 [ℹ]  creating addon: kube-proxy
+2025-07-21 17:27:31 [ℹ]  successfully created addon: kube-proxy
+2025-07-21 17:27:31 [ℹ]  creating addon: coredns
+2025-07-21 17:27:31 [ℹ]  successfully created addon: coredns
+2025-07-21 17:29:32 [ℹ]  waiting for the control plane to become ready
+2025-07-21 17:29:32 [✔]  saved kubeconfig as "/root/.kube/config"
+2025-07-21 17:29:32 [ℹ]  no tasks
+2025-07-21 17:29:32 [✔]  all EKS cluster resources for "private-alb-cluster01" have been created
+2025-07-21 17:29:33 [ℹ]  kubectl command should work with "/root/.kube/config", try 'kubectl get nodes'
+2025-07-21 17:29:33 [✔]  EKS cluster "private-alb-cluster01" in "us-east-1" region is ready
+```
+
 ### 3️⃣ Create Nodegroup in Private Subnet
 
 ```bash
@@ -80,6 +129,36 @@ eksctl create nodegroup \
   --subnet-ids <private-subnet-ids>
 ```
 
+** log
+```bash
+2025-07-21 17:31:08 [ℹ]  will use version 1.32 for new nodegroup(s) based on control plane version
+2025-07-21 17:31:09 [ℹ]  nodegroup "private-node-group01" will use "" [AmazonLinux2/1.32]
+2025-07-21 17:31:09 [ℹ]  1 nodegroup (private-node-group01) was included (based on the include/exclude rules)
+2025-07-21 17:31:09 [ℹ]  will create a CloudFormation stack for each of 1 managed nodegroups in cluster "private-alb-cluster01"2025-07-21 17:31:09 [ℹ]
+2 sequential tasks: { fix cluster compatibility, 1 task: { 1 task: { create managed nodegroup "private-node-group01" } }
+}
+2025-07-21 17:31:09 [ℹ]  checking cluster stack for missing resources
+2025-07-21 17:31:09 [ℹ]  cluster stack has all required resources
+2025-07-21 17:31:09 [ℹ]  building managed nodegroup stack "eksctl-private-alb-cluster01-nodegroup-private-node-group01"
+2025-07-21 17:31:10 [ℹ]  deploying stack "eksctl-private-alb-cluster01-nodegroup-private-node-group01"
+2025-07-21 17:31:10 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-nodegroup-private-node-group01"
+2025-07-21 17:31:40 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-nodegroup-private-node-group01"
+2025-07-21 17:32:33 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-nodegroup-private-node-group01"
+2025-07-21 17:34:11 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-nodegroup-private-node-group01"
+2025-07-21 17:34:11 [ℹ]  no tasks
+2025-07-21 17:34:11 [✔]  created 0 nodegroup(s) in cluster "private-alb-cluster01"
+2025-07-21 17:34:11 [ℹ]  nodegroup "private-node-group01" has 2 node(s)
+2025-07-21 17:34:11 [ℹ]  node "ip-192-168-2-195.ec2.internal" is ready
+2025-07-21 17:34:11 [ℹ]  node "ip-192-168-3-192.ec2.internal" is ready
+2025-07-21 17:34:11 [ℹ]  waiting for at least 2 node(s) to become ready in "private-node-group01"
+2025-07-21 17:34:11 [ℹ]  nodegroup "private-node-group01" has 2 node(s)
+2025-07-21 17:34:11 [ℹ]  node "ip-192-168-2-195.ec2.internal" is ready
+2025-07-21 17:34:11 [ℹ]  node "ip-192-168-3-192.ec2.internal" is ready
+2025-07-21 17:34:11 [✔]  created 1 managed nodegroup(s) in cluster "private-alb-cluster01"
+2025-07-21 17:34:11 [ℹ]  checking security group configuration for all nodegroups
+2025-07-21 17:34:11 [ℹ]  all nodegroups have up-to-date cloudformation templates
+```
+
 ### 4️⃣ Set Up ALB Ingress Controller
 
 **a. OIDC Setup**
@@ -89,6 +168,11 @@ eksctl utils associate-iam-oidc-provider \
   --region <region> \
   --cluster private-alb-cluster \
   --approve
+```
+** log
+```bash
+2025-07-21 17:35:36 [ℹ]  will create IAM Open ID Connect provider for cluster "private-alb-cluster01" in "us-east-1"
+2025-07-21 17:35:36 [✔]  created IAM Open ID Connect provider for cluster "private-alb-cluster01" in "us-east-1"
 ```
 
 **b. IAM Policy for ALB Controller**
@@ -113,6 +197,21 @@ eksctl create iamserviceaccount \
   --approve
 ```
 
+** log
+```bash
+2025-07-21 17:40:19 [ℹ]  1 iamserviceaccount (kube-system/aws-load-balancer-controller) was included (based on the include/exclude rules)
+2025-07-21 17:40:19 [!]  serviceaccounts that exist in Kubernetes will be excluded, use --override-existing-serviceaccounts to override
+2025-07-21 17:40:19 [ℹ]  1 task: {
+    2 sequential sub-tasks: {
+        create IAM role for serviceaccount "kube-system/aws-load-balancer-controller",
+        create serviceaccount "kube-system/aws-load-balancer-controller",
+    } }2025-07-21 17:40:19 [ℹ]  building iamserviceaccount stack "eksctl-private-alb-cluster01-addon-iamserviceaccount-kube-system-aws-load-balancer-controller"
+2025-07-21 17:40:20 [ℹ]  deploying stack "eksctl-private-alb-cluster01-addon-iamserviceaccount-kube-system-aws-load-balancer-controller"
+2025-07-21 17:40:20 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-addon-iamserviceaccount-kube-system-aws-load-balancer-controller"
+2025-07-21 17:40:50 [ℹ]  waiting for CloudFormation stack "eksctl-private-alb-cluster01-addon-iamserviceaccount-kube-system-aws-load-balancer-controller"
+2025-07-21 17:40:50 [ℹ]  created serviceaccount "kube-system/aws-load-balancer-controller"
+```
+
 **d. Install ALB Controller via Helm**
 
 ```bash
@@ -127,6 +226,18 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   --set vpcId=<vpc-id> \
   --set serviceAccount.name=aws-load-balancer-controller \
   --set ingressClass=alb
+```
+
+** log
+```bash
+NAME: aws-load-balancer-controller
+LAST DEPLOYED: Mon Jul 21 17:46:55 2025
+NAMESPACE: kube-system
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+AWS Load Balancer controller installed!
 ```
 
 ### 5️⃣ Deploy App (Kubernetes)
