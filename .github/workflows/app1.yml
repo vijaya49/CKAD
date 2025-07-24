@@ -1,0 +1,73 @@
+name: Smart Build and Push to ECR
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      changed_apps: ${{ steps.set-vars.outputs.changed_apps }}
+      has_changes: ${{ steps.set-vars.outputs.has_changes }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch base branch
+        run: git fetch origin main
+
+      - name: Get changed app folders
+        id: set-vars
+        run: |
+          changed_files=$(git diff --name-only origin/main...HEAD)
+          echo "Changed files: $changed_files"
+
+          apps=$(echo "$changed_files" | grep '^EKS/' | cut -d '/' -f2 | sort -u | jq -R -s -c 'split("\n") | map(select(. != ""))')
+          echo "Detected changed apps: $apps"
+
+          # Fallback to empty array if null
+          if [ "$apps" = "null" ]; then
+            apps="[]"
+          fi
+
+          has_changes="false"
+          if [ "$apps" != "[]" ]; then
+            has_changes="true"
+          fi
+
+          echo "changed_apps=$apps" >> $GITHUB_OUTPUT
+          echo "has_changes=$has_changes" >> $GITHUB_OUTPUT
+
+  build-and-push:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.has_changes == 'true'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        app: ${{ fromJson(needs.detect-changes.outputs.changed_apps) }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and tag ${{ matrix.app }}
+        run: |
+          docker build -t ${{ matrix.app }}:${{ github.sha }} ./EKS/${{ matrix.app }}
+          docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:latest
+          docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:${{ github.sha }}
+
+      - name: Push ${{ matrix.app }} to ECR
+        run: |
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:latest
+          docker push ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:${{ github.sha }}

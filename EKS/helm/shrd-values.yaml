@@ -1,0 +1,4 @@
+apps:
+  - name: app1
+    path: /custom1
+    image: <overridden-image-url>
