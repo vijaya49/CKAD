@@ -1,4 +1,4 @@
-name: Smart Build and Push to ECR
+name: Smart Docker Build and Push
 
 on:
   push:
@@ -8,35 +8,34 @@ jobs:
   detect-changes:
     runs-on: ubuntu-latest
     outputs:
-      changed_apps: ${{ steps.set-vars.outputs.changed_apps }}
-      has_changes: ${{ steps.set-vars.outputs.has_changes }}
+      changed_apps: ${{ steps.filter.outputs.changed_apps }}
+      has_changes: ${{ steps.filter.outputs.has_changes }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Fetch base branch
-        run: git fetch origin main
-
-      - name: Get changed app folders
-        id: set-vars
+      - name: Detect Changed App Folders
+        id: filter
         run: |
+          git fetch origin main
           changed_files=$(git diff --name-only origin/main...HEAD)
-          echo "Changed files: $changed_files"
 
-          apps=$(echo "$changed_files" | grep '^EKS/' | cut -d '/' -f2 | sort -u | jq -R -s -c 'split("\n") | map(select(. != ""))')
-          echo "Detected changed apps: $apps"
+          echo "Changed files:"
+          echo "$changed_files"
 
-          # Fallback to empty array if null
-          if [ "$apps" = "null" ]; then
-            apps="[]"
+          changed_apps=$(echo "$changed_files" | grep '^EKS/app' | cut -d '/' -f2 | sort -u | jq -R -s -c 'split("\n") | map(select(. != ""))')
+
+          # Handle empty or null cases
+          if [ "$changed_apps" = "null" ] || [ -z "$changed_apps" ]; then
+            changed_apps="[]"
           fi
 
           has_changes="false"
-          if [ "$apps" != "[]" ]; then
+          if [ "$changed_apps" != "[]" ]; then
             has_changes="true"
           fi
 
-          echo "changed_apps=$apps" >> $GITHUB_OUTPUT
+          echo "changed_apps=$changed_apps" >> $GITHUB_OUTPUT
           echo "has_changes=$has_changes" >> $GITHUB_OUTPUT
 
   build-and-push:
@@ -61,13 +60,13 @@ jobs:
       - name: Login to Amazon ECR
         uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Build and tag ${{ matrix.app }}
+      - name: Build and Tag ${{ matrix.app }}
         run: |
           docker build -t ${{ matrix.app }}:${{ github.sha }} ./EKS/${{ matrix.app }}
           docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:latest
           docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:${{ github.sha }}
 
-      - name: Push ${{ matrix.app }} to ECR
+      - name: Push Image ${{ matrix.app }} to ECR
         run: |
           docker push ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:latest
           docker push ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:${{ github.sha }}
