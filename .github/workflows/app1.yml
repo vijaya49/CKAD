@@ -68,11 +68,11 @@ jobs:
         run: |
           echo "🔨 Building app: ${{ matrix.app }}"
           docker build -t ${{ matrix.app }}:${{ github.sha }} ./EKS/${{ matrix.app }}
-          docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:latest
-          docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:${{ github.sha }}
+          docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}:latest
+          docker tag ${{ matrix.app }}:${{ github.sha }} ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
 
       - name: Push image for ${{ matrix.app }}
         run: |
           echo "📤 Pushing ${{ matrix.app }} to ECR"
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:latest
-          docker push ${{ secrets.ECR_REGISTRY }}/${{ matrix.app }}:${{ github.sha }}
+          docker push ${{ secrets.ECR_REGISTRY }}:latest
+          docker push ${{ secrets.ECR_REGISTRY }}:${{ github.sha }}
