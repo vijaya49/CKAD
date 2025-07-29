@@ -16,15 +16,4 @@ apps:
   - name: app3
     path: /app3
     image: <your-ecr-image-url-for-app3>
-  - name: app4
-    path: /app4
-    image: <your-ecr-image-url-for-app4>
-  - name: app5
-    path: /app5
-    image: <your-ecr-image-url-for-app5>
-  - name: app6
-    path: /app6
-    image: <your-ecr-image-url-for-app6>
-  - name: app7
-    path: /app7
-    image: <your-ecr-image-url-for-app7>
+  

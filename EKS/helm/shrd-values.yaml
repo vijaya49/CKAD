@@ -1,4 +1,10 @@
 apps:
   - name: app1
     path: /custom1
-    image: <overridden-image-url>
+    image: 024848479897.dkr.ecr.us-east-1.amazonaws.com/eks-deployment:app1
+  - name: app2
+    path: /custom2
+    image: 024848479897.dkr.ecr.us-east-1.amazonaws.com/eks-deployment:app2
+  - name: app3
+    path: /custom2
+    image: 024848479897.dkr.ecr.us-east-1.amazonaws.com/eks-deployment:app3
