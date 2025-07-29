@@ -1,22 +1,71 @@
 {{- range .Values.apps }}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .name }}
+  labels:
+    {{- include "multi-apps.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
 spec:
-  replicas: 2
+  replicas: {{ .replicas | default 2 }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: {{ .name }}
+      {{- include "multi-apps.selectorLabels" $ | nindent 6 }}
   template:
     metadata:
       labels:
         app: {{ .name }}
+        {{- include "multi-apps.selectorLabels" $ | nindent 8 }}
+        app.kubernetes.io/component: {{ .name }}
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") $ | sha256sum }}
     spec:
       containers:
         - name: {{ .name }}
           image: {{ .image }}
+          imagePullPolicy: Always
           ports:
-            - containerPort: 80
----
+            - name: http
+              containerPort: {{ $.Values.service.targetPort | default 80 }}
+              protocol: TCP
+          {{- if .env }}
+          env:
+            {{- range $key, $value := .env }}
+            - name: {{ $key }}
+              value: {{ $value | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .resources }}
+          resources:
+            {{- toYaml .resources | nindent 12 }}
+          {{- end }}
+          {{- if .healthCheck }}
+          livenessProbe:
+            httpGet:
+              path: {{ .healthCheck.path | default "/" }}
+              port: http
+            initialDelaySeconds: {{ .healthCheck.initialDelaySeconds | default 30 }}
+            periodSeconds: {{ .healthCheck.periodSeconds | default 10 }}
+            timeoutSeconds: {{ .healthCheck.timeoutSeconds | default 5 }}
+            successThreshold: {{ .healthCheck.successThreshold | default 1 }}
+            failureThreshold: {{ .healthCheck.failureThreshold | default 3 }}
+          readinessProbe:
+            httpGet:
+              path: {{ .healthCheck.path | default "/" }}
+              port: http
+            initialDelaySeconds: {{ (.healthCheck.initialDelaySeconds | default 30) | int | add -20 }}
+            periodSeconds: {{ .healthCheck.periodSeconds | default 10 }}
+            timeoutSeconds: {{ .healthCheck.timeoutSeconds | default 5 }}
+            successThreshold: {{ .healthCheck.successThreshold | default 1 }}
+            failureThreshold: {{ .healthCheck.failureThreshold | default 3 }}
+          {{- end }}
+      restartPolicy: Always
+      terminationGracePeriodSeconds: 30
 {{- end }}

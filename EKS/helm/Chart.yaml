@@ -1,4 +1,12 @@
 apiVersion: v2
 name: multi-apps
 description: A Helm chart for multiple apps behind a single ALB Ingress
-version: 0.1.0
+version: 0.1.1
+appVersion: "1.0"
+keywords:
+  - kubernetes
+  - alb
+  - ingress
+  - multi-app
+maintainers:
+  - name: DevOps Team

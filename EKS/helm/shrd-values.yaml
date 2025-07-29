@@ -1,10 +1,79 @@
+alb:
+  ingressClass: alb
+  scheme: internet-facing
+  targetType: ip
+  subnets:
+    - subnet-01fba20a8f2a742fa
+    - subnet-0d43dd1f59b2c6d3d
+  healthCheck:
+    path: /
+    protocol: HTTP
+    port: traffic-port
+  tags:
+    Environment: shared
+    Team: platform
+
+# Service Account
+serviceAccount:
+  create: true
+  automount: true
+  annotations: {}
+  name: ""
+
 apps:
   - name: app1
     path: /custom1
     image: 024848479897.dkr.ecr.us-east-1.amazonaws.com/eks-deployment:app1
+    replicas: 3
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+    healthCheck:
+      path: /
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    env:
+      NODE_ENV: production
+      APP_NAME: app1
+      
   - name: app2
     path: /custom2
     image: 024848479897.dkr.ecr.us-east-1.amazonaws.com/eks-deployment:app2
+    replicas: 3
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+    healthCheck:
+      path: /
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    env:
+      NODE_ENV: production
+      APP_NAME: app2
+      
   - name: app3
-    path: /custom2
+    path: /custom3
     image: 024848479897.dkr.ecr.us-east-1.amazonaws.com/eks-deployment:app3
+    replicas: 3
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+    healthCheck:
+      path: /
+      initialDelaySeconds: 15
+      periodSeconds: 10
+    env:
+      NODE_ENV: production
+      APP_NAME: app3

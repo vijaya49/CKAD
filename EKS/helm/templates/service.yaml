@@ -1,15 +1,20 @@
 {{- range .Values.apps }}
+---
 apiVersion: v1
 kind: Service
 metadata:
   name: {{ .name }}-service
+  labels:
+    {{- include "multi-apps.labels" $ | nindent 4 }}
+    app.kubernetes.io/component: {{ .name }}
 spec:
+  type: {{ $.Values.service.type | default "ClusterIP" }}
+  ports:
+    - port: {{ $.Values.service.port | default 80 }}
+      targetPort: {{ $.Values.service.targetPort | default 80 }}
+      protocol: TCP
+      name: http
   selector:
     app: {{ .name }}
-  ports:
-    - protocol: TCP
-      port: 80
-      targetPort: 80
-  type: ClusterIP
----
+    {{- include "multi-apps.selectorLabels" $ | nindent 4 }}
 {{- end }}
