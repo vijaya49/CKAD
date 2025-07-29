@@ -39,6 +39,7 @@ apps:
     healthCheck:
       path: /health
       initialDelaySeconds: 30
+      readinessInitialDelaySeconds: 10
       periodSeconds: 10
       timeoutSeconds: 5
       successThreshold: 1
@@ -59,6 +60,7 @@ apps:
     healthCheck:
       path: /health
       initialDelaySeconds: 30
+      readinessInitialDelaySeconds: 10
       periodSeconds: 10
       timeoutSeconds: 5
       successThreshold: 1
@@ -79,6 +81,7 @@ apps:
     healthCheck:
       path: /health
       initialDelaySeconds: 30
+      readinessInitialDelaySeconds: 10
       periodSeconds: 10
       timeoutSeconds: 5
       successThreshold: 1
@@ -95,6 +98,7 @@ service:
   type: ClusterIP
   port: 80
   targetPort: 80
+
 
 # Ingress configuration
 ingress:

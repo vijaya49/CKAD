@@ -60,7 +60,7 @@ spec:
             httpGet:
               path: {{ .healthCheck.path | default "/" }}
               port: http
-            initialDelaySeconds: {{ (.healthCheck.initialDelaySeconds | default 30) | int | add -20 }}
+            initialDelaySeconds: {{ .healthCheck.readinessInitialDelaySeconds | default 5 }}
             periodSeconds: {{ .healthCheck.periodSeconds | default 10 }}
             timeoutSeconds: {{ .healthCheck.timeoutSeconds | default 5 }}
             successThreshold: {{ .healthCheck.successThreshold | default 1 }}
